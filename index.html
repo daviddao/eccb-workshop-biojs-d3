@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<base target="_blank">
+<base>
+<style>
+
+@import url(css.css);
+@import url(style.css);
+@import url(chart.css);
+
+</style>
+<body class="overview">
+<script src="d3/d3.min.js"></script>
+<script src="chart.js"></script>
+
+<section>
+<h1 class="blue">BioJS & D3 <br><span class="purple" style="font-size:110px"> Visualizing Evolution for the Web</span></h1>
+<h2><a href="http://daviddao.de">David Dao</a><div class="grey">@daviddao_</div></h2>    
+</section>
+    
+<section>
+    <h5 class="green">Topics</h5>
+<ul>
+<li><span class="blue">Why do we need visualization?</span>
+<li><span class="blue">Gentle introduction into D3</span>
+    <ul>
+        <li>Manipulating the DOM</li>
+        <li>Binding Data</li>
+        <li>Transitions</li>
+        </ul>
+<li><span class="blue">BioJS Tree Viewer</span>
+</ul>
+<h2>Outline</h2>
+</section>
+<!--
+
+<section>
+<h3 class="grey">About me</h3>
+<h5 class="green" style="font-size:50px">David Dao</h5>
+<span class="blue">Google Summer of Code</span> Student <span class="grey">BioJS</span><br>
+CS Bachelor of Science <span class="grey">KIT</span><br>
+Currently Master's Program <span class="grey">TUM</span><br>
+Researcher at <span class="grey">HITS</span>
+</section>    
+-->
+    
+<section style="background-image:url(bad.png);">
+    <aside>Death by Powerpoint. Does somebody know where this slide is taken from?</aside>
+</section>
+    
+<section style="background-image:url(cern.png);">
+    <aside>Announcement of Higgs Boson 2012</aside>
+</section>
+
+<section>
+    <h2>Crunching the data</h2>
+    <h5>Representing <span class=blue>Evolutionary Trees</span></h5>
+    <pre><span style="font-size:20px"> (((((homo_sapiens:9,pan_troglodytes:9)207598:34,callithrix_jacchus:43)314293:52,
+    mus_musculus:95)314146:215,taeniopygia_guttata:310)32524:107,danio_rerio:417)117571:135;</span>
+    </pre>
+</section>
+    
+<section>
+    <h2><span class="green">Time</span> (Evolutionary distance)</h2>
+    <h5>Representing <span class=blue>Evolutionary Trees</span></h5>
+    <pre><code><span style="font-size:20px"> (((((homo_sapiens:9,pan_troglodytes:9)207598:34,callithrix_jacchus:43)314293:52,
+    mus_musculus:95)314146:215,taeniopygia_guttata:310)32524:107,danio_rerio:417)117571:135;</span></code>
+    </pre>
+</section>
+    
+
+<section style="background-image:url(ensembl.png);">
+    <aside>Phylogenetic trees in web by ensembl.org</aside>
+</section>
+    
+<section>
+    <h1 class="grey">The <span class="blue">web</span> can do <span class="green">better!</span></h1>
+    <h2 class="grey">Later more ... Stay tuned!</h2>
+</section>
+    
+<!--
+<section>
+    <script src="newick_input/biojs-vis-tree.min.js"></script>
+-->
+
+    <!-- Tree.js -->
+<!--
+    <script src="newick_input/newick_input.js"></script>
+
+    <div id="tree"></div>
+
+    <script>
+        //var options = ["A","B","C","D"];
+        var bjs_tree = biojs.vis.tree;
+         //Choose the overall layout ta
+        var ta = bjs_tree.tree();
+         //var theme = tnt_theme().newick("(((human, chimp), mouse))").buttons(options);
+
+         //Use the theme we just generated!
+        var theme = tnt_theme();
+
+        theme(ta, document.getElementById('tree'));
+    </script>    
+</section>
+-->
+    
+<section>
+    <h1 class="purple">Introduction to D3</h1>
+    <aside>Slides are partly taken from @mbostocks</aside>
+</section>
+    
+<section class="chapter">
+    <h1 class="grey">What is <span class="blue">D3?</span></h1>
+</section>
+    
+<section style="background-image:url(d3.png);">
+    <aside>d3.js</aside>
+</section>
+    
+<section style="background-image:url(d3min.png);">
+    <aside>d3.min.js</aside>
+</section>
+
+<section>
+<h1 class="double">Visualizing <span class="purple">Data</span> with <span class="green">Web Standards</span></h1>
+<h2>D3 provides transformation; no new representation.</h2>
+<aside>A central tenet of D3 is to make visualization easier without introducing a new way of representing an image. D3 uses existing standards—namely HTML and SVG.<p>This approach offers a whole host of benefits, including greater expressiveness, future-proofing, and compatibility with existing tools and technologies, such as CSS and debuggers.</aside>
+</section>
+    
+<section>
+<h1><span class="purple">Data</span> ↦ <span class="green">Elements</span></h1>
+<h2>Visualization requires visual encoding: mapping data to elements.</h2>
+<aside>Since D3 does not provide new representa&shy;tion, the task of visualization is constructing a DOM from data. We must also update the DOM whenever the data changes, either due to dynamic (<i>e.g.</i>, realtime) data or interaction.<p>In a visualization, each entity (or data point) has a corresponding element (or graphical mark). D3 helps you maintain this mapping from data to elements.</aside>
+</section>
+    
+<section>
+<h1><span class="purple">Data</span>-Driven <span class="green">Documents</span></h1>
+<h2>The name “D3” refers to the <a href="http://www.w3.org/TR/dom/">W3C <span class="green">Document</span> Object Model</a>.</h2>
+</section>
+
+
+<section>
+<h1 class="green">Web Standards</h1>
+<h2>There are myriad free resources for learning standards.</h2>
+<aside>“Learning D3” is largely learning web standards. Fortunately, there are lots of resources for learning standards!</aside>
+</section>
+
+<section>
+<h1><span class="green">HTML</span> Resources</h1>
+<h2><a href="http://www.w3.org/TR/html5/">HTML5 Spec</a>, <a href="http://developers.whatwg.org/">HTML5 for Developers</a>, <a href="https://developer.mozilla.org/en/HTML">MDN</a>, <a href="http://diveintohtml5.info/">Dive Into HTML5</a></h2>
+<aside>Specs are good for reference, but a bit overwhelming if you’re not sure where to start. Specs can be more helpful for understanding interesting techniques found in the wild.</aside>
+</section>
+
+<section>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;body&gt;
+Hello, world!</code></pre>
+<h2><a href="hello-world.html">hello-world.html</a></h2>
+<aside>Hat tip to Paul Irish for showing the beauty of minimalist HTML5 markup. All those extraneous tags? Poof!</aside>
+</section>
+
+<section>
+<h1><span class="green">SVG</span> Resources</h1>
+<h2><a href="http://www.w3.org/TR/SVG/">SVG Spec</a>, <a href="https://developer.mozilla.org/en/SVG">MDN</a>, <a href="https://github.com/mbostock/d3/wiki/SVG-Shapes">D3 API Reference</a></h2>
+<aside>SVG lets you draw vector graphics in the browser, allowing much greater expressiveness than HTML. You can do some stuff (like simple bar charts and input controls) using only HTML, but mostly you’ll want to use SVG to visualize data.</aside>
+</section>
+
+<section>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;svg width="960" height="500"&gt;
+  &lt;text y="12"&gt;
+    Hello, world!
+  &lt;/text&gt;
+&lt;/svg&gt;</code></pre>
+<h2><a href="hello-svg.html">hello-svg.html</a></h2>
+<aside>You can embed SVG directly inside HTML, much like an image tag. Of course, if you’re using D3 for data visualization, the SVG will more often be constructed by JavaScript. Sometimes you might have static bits of SVG; you can always modify it later.</aside>
+</section>
+    
+<section>
+<h1>SVG Basic Shapes</h1>
+<h2><a href="http://www.w3.org/TR/SVG/shapes.html">SVG Spec</a></h2>
+</section>
+
+<section id="rect">
+<pre><code class="html">&lt;rect
+    x="0"
+    y="0"
+    width="0"
+    height="0"
+    rx="0"
+    ry="0"&gt;</code></pre>
+<h2>Rect</h2>
+<script>(function() {
+
+var width = 1280,
+    height = 720;
+
+var svg = d3.select("#rect").append("svg")
+    .attr("class", "chart")
+    .attr("width", width)
+    .attr("height", height)
+    .on("mousemove", mousemove);
+
+svg.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height);
+
+function mousemove() {
+  var m = d3.mouse(this),
+      x = m[0],
+      y = m[1];
+
+  svg.append("rect")
+      .attr("x", -10)
+      .attr("y", -10)
+      .attr("width", 20)
+      .attr("height", 20)
+      .attr("transform", "translate(" + x + "," + y + ")scale(.1)")
+      .style("fill", "none")
+      .style("stroke", "#fff")
+    .transition()
+      .duration(750)
+      .attr("transform", "translate(" + x + "," + y + ")scale(4)")
+      .remove();
+}
+
+})()</script>
+<aside>Note that position and size must be defined as attributes in SVG, rather than styles. Colors and opacity should be specified as CSS, however.</aside>
+</section>
+
+<section id="circle">
+<pre><code class="html">&lt;circle
+    cx="0"
+    cy="0"
+    r="0"&gt;</code></pre>
+<h2>Circle</h2>
+<script>(function() {
+
+var width = 1280,
+    height = 720;
+
+var svg = d3.select("#circle").append("svg")
+    .attr("class", "chart")
+    .attr("width", width)
+    .attr("height", height)
+    .on("mousemove", mousemove);
+
+svg.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height);
+
+function mousemove() {
+  var m = d3.mouse(this),
+      x = m[0],
+      y = m[1];
+
+  svg.append("circle")
+      .attr("r", 20)
+      .attr("transform", "translate(" + x + "," + y + ")scale(.1)")
+      .style("fill", "none")
+      .style("stroke", "#fff")
+    .transition()
+      .duration(750)
+      .attr("transform", "translate(" + x + "," + y + ")scale(4)")
+      .remove();
+}
+
+})()</script>
+<aside>Don’t forget the r attribute, or your circles will be invisible!</aside>
+</section>
+
+<section id="line">
+<pre><code class="html">&lt;line
+    x1="0"
+    y1="0"
+    x2="0"
+    y2="0"&gt;</code></pre>
+<h2>Line</h2>
+<script>(function() {
+
+var width = 1280,
+    height = 720,
+    x0,
+    y0;
+
+var svg = d3.select("#line").append("svg")
+    .attr("class", "chart")
+    .attr("width", width)
+    .attr("height", height)
+    .on("mousemove", mousemove);
+
+svg.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height);
+
+function mousemove() {
+  var m = d3.mouse(this),
+      x1 = m[0],
+      y1 = m[1];
+
+  if (x0 != null) {
+    svg.append("line")
+      .attr("x1", x0)
+      .attr("y1", y0)
+      .attr("x2", x1)
+      .attr("y2", y1)
+      .style("stroke-width", "3px")
+      .style("stroke", "#fff")
+    .transition()
+      .duration(750)
+      .remove();
+
+    x1 = y1 = null;
+  }
+
+  x0 = x1;
+  y0 = y1;
+}
+
+})()</script>
+<aside>Mousemove?</aside>
+</section>
+
+<section id="text1">
+<pre><code class="html">&lt;text
+    x="0"
+    y="0"
+    dx="0"
+    dy="0"
+    text-anchor="start"&gt;</code></pre>
+<h2>Text</h2>
+<script>(function() {
+
+var width = 1280,
+    height = 720;
+
+var svg = d3.select("#text1").append("svg")
+    .attr("class", "chart")
+    .attr("width", width)
+    .attr("height", height)
+    .on("mousemove", mousemove);
+
+svg.append("rect")
+    .attr("class", "background")
+    .attr("width", width)
+    .attr("height", height);
+
+function mousemove() {
+  var m = d3.mouse(this),
+      x = m[0],
+      y = m[1];
+
+  svg.append("text")
+      .attr("text-anchor", "middle")
+      .attr("transform", "translate(" + x + "," + y + ")scale(.1)")
+      .text("BioJS rocks ECCB!")
+      .style("fill", "white")
+    .transition()
+      .duration(750)
+      .attr("transform", "translate(" + x + "," + y + ")scale(2)")
+      .remove();
+}
+
+})()</script>
+<aside>SVG is designed to be agnostic about text direction (left-to-right vs. right-to-left), so the text-anchor attribute can have the values "start", "middle" and "end".</aside>
+</section>
+
+<section>
+<pre><code class="html">&lt;text dy="0"&gt;bottom&lt;/text&gt;
+&lt;text dy=".35em"&gt;middle&lt;/text&gt;
+&lt;text dy=".71em"&gt;top&lt;/text&gt;</code></pre>
+<h2>Vertical alignment of text is slightly awkward.</h2>
+</section>
+
+<section>
+<h1><span class="green">CSS</span> Resources</h1>
+<h2><a href="http://www.w3.org/TR/CSS2/">CSS Spec</a>, <a href="http://www.w3.org/TR/selectors/">Selectors Spec</a></h2>
+<aside>Unlike HTML and SVG, CSS doesn’t introduce new representation; it’s just a way of adding aesthetics and presentation (such as colors and fonts). CSS greatly simplifies your code, so I highly recommend it!<p>For example, rather than assigning colors explicitly via JavaScript, assign a class. Then you can easily change the definition or apply multiple styles simultaneously.</aside>
+</section>
+
+<section>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;style&gt;
+body { background: steelblue; }
+&lt;/style&gt;
+&lt;body&gt;
+Hello, world!</code></pre>
+<h2><a href="hello-css.html">hello-css.html</a></h2>
+</section>
+
+<section>
+<h1><span class="green">JavaScript</span> Resources</h1>
+<h2><a href="https://developer.mozilla.org/en/JavaScript">MDN</a>, <a href="http://javascript.crockford.com/">Douglas Crockford</a>’s <a href="http://shop.oreilly.com/product/9780596517748.do">JavaScript: The Good Parts</a></h2>
+<aside>If beauty is in the eye of the beholder, JavaScript is a beautiful language. D3 uses some functional idioms (lots of closures and higher-order programming). These concepts can be unfamiliar but are very elegant and powerful. If you’re unsure how some piece of D3 code works, reading about these language features may help.</aside>
+</section>
+
+<section>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;body&gt;
+&lt;script&gt;
+console.log("Hello, world!");
+&lt;/script&gt;</code></pre>
+<h2><a href="hello-javascript.html">hello-javascript.html</a></h2>
+</section>
+
+<section class="chapter">
+    <h1 class="grey">Manipulating the <span class="purple">DOM</span></h1>
+</section>    
+    
+<section>
+<h1>selection.append</h1>
+<h2>Create new elements, append, and select.</h2>
+</section>
+
+<section>
+<pre><code>// select the &lt;body&gt; element
+var body = d3.select("body");
+
+// add an &lt;h1&gt; element
+var h1 = body.append("h1");
+h1.text("Hello!");</code></pre>
+<h2>With one element selected, adds one element.</h2>
+</section>
+
+<section>
+<pre><code>// select all &lt;section&gt; elements
+var section = d3.selectAll("section");
+
+// add an &lt;h1&gt; element to each
+var h1 = section.append("h1");
+h1.text("Hello!");</code></pre>
+<h2>With many elements selected, adds one element to each.</h2>
+</section>
+    
+<section>
+    <h1 id="h1demo">Demo</h1>
+    <h5>Hey there!</h5>
+    
+</section>    
+
+<section class="chapter">
+    <h1>Binding <span class="blue">Data</span></h1>
+</section>
+    
+<section>
+<h1>Data are Arrays</h1>
+<h2>You can represent data however you like (in JavaScript).</h2>
+<aside>Selections are arrays, and data are arrays. Coincidence? Nope.</aside>
+</section>
+
+<section>
+<pre><code>// A bar chart, perhaps?
+var data = [1, 1, 2, 3, 5, 8];</code></pre>
+<h2>Data can be numbers.</h2>
+<aside>If you want to be fancy, you can call an array of numbers a <q class="nogap">univariate dataset</q>.</aside>
+</section>
+
+<section id="bar-chart">
+<script>
+d3.select("#bar-chart").datum([1, 1, 2, 3, 5, 8]).call(barChart());
+</script>
+<h2><a href="bar-chart.html">bar-chart.html</a></h2>
+</section>
+
+<section>
+<pre><code>// A scatterplot, perhaps?
+var data = [
+  {x: 10.0, y: 9.14},
+  {x:  8.0, y: 8.14},
+  {x: 13.0, y: 8.74},
+  {x:  9.0, y: 8.77},
+  {x: 11.0, y: 9.26}
+];</code></pre>
+<h2>Data can be objects.</h2>
+<aside>If you want to be fancy, you can call an array of objects a <q class="nogap">multivariate dataset</q>.</aside>
+</section>
+
+<section id="dot-chart">
+<script>
+d3.select("#dot-chart").datum([
+  {x: 10.0, y: 9.14},
+  {x:  8.0, y: 8.14},
+  {x: 13.0, y: 8.74},
+  {x:  9.0, y: 8.77},
+  {x: 11.0, y: 9.26},
+  {x: 14.0, y: 8.10},
+  {x:  6.0, y: 6.13},
+  {x:  4.0, y: 3.10},
+  {x: 12.0, y: 9.13},
+  {x:  7.0, y: 7.26},
+  {x:  5.0, y: 4.74},
+]).call(dotChart());
+</script>
+<h2><a href="dot-chart.html">dot-chart.html</a></h2>
+<aside>Nerd cred if you recognize this!</aside>
+</section>
+
+<section>
+<h1><span class="purple">Data</span> ↦ <span class="green">Elements</span></h1>
+<h2>Use data to create multiple elements.</h2>
+<aside>D3 doesn’t provide a single method for creating multiple elements; instead, it provides a pattern for managing the mapping from data to elements. The way to create elements from scratch is a special case of the more generalized form.</aside>
+</section>
+
+<section>
+<pre><code>svg.selectAll("circle")
+    .data(data)
+  .enter().append("circle")
+    .attr("cx", x)
+    .attr("cy", y)
+    .attr("r", 2.5);</code></pre>
+<h2>We want the selection <span class="purple">“circle”</span> to correspond to data.</h2>
+<aside>This common snippet creates new elements from data. The first line may be surprising—why select &lt;circle&gt; elements if you know they don’t exist? Well, you’re telling D3 that you want them to correspond to data.<p>This parsimonious approach means that when you need to handle update and exit in the future (for your interactive or dynamic visualizations), it’s a simple extension of a pattern you already know.</aside>
+</section>
+
+<section>
+<pre><code>var circle = svg.selectAll("circle")
+    .data(data);</code></pre>
+<h2>The <span class="purple">data</span> method computes the join, defining enter and exit.</h2>
+<aside>The data method does all the work. The enter and exit methods just return the subselections computed in the join.</aside>
+</section>
+<!--
+    
+<section>
+    <h1>Demo Time! Let's make a chromosome bar chart!</h1>
+</section>
+    
+-->
+<section class="chapter">
+    <h1>Transitions</h1>
+</section>
+    
+<section id="interpolate-example1">
+<pre><code></code></pre>
+<script>(function(){
+
+var arc = d3.svg.arc()
+    .startAngle(0)
+    .endAngle(function(d) { return d.θ; })
+    .innerRadius(0)
+    .outerRadius(function(d) { return d.r; });
+
+var x = d3.scale.linear()
+    .domain([0, 1280])
+    .range([{θ: Math.PI / 2, r: 80}, {θ: 2 * Math.PI, r: 320}]);
+
+var svg = d3.select("#interpolate-example1").append("svg")
+    .attr("width", 1280)
+    .attr("height", 720)
+    .attr("class", "chart")
+    .on("mousemove", mousemove);
+
+svg.append("rect")
+    .attr("class", "background")
+    .attr("width", 1280)
+    .attr("height", 720)
+    .style("pointer-events", "all");
+
+var path = svg.append("path")
+    .datum(x(640))
+    .attr("d", arc)
+    .attr("transform", "translate(640,360)")
+    .style("fill", "#3182bd")
+    .style("stroke", "#fff")
+    .style("stroke-width", "2px");
+
+function mousemove() {
+  var d = x(d3.mouse(this)[0]);
+  path.datum(d).attr("d", arc);
+  d3.select("#interpolate-example1 code").text(JSON.stringify(d));
+}
+
+})()</script>
+<h2>You can even interpolate objects!</h2>
+</section>
+    
+    
+<section style="background-color:white">
+			<div id="intro">
+				<h2 style="color:black">Live Coding Demonstration</h2>
+			</div>
+
+			<svg width="100%" height="100%"><rect x="0" y="0" width="100%" height="100%" fill="white" stroke="none"></rect><circle cx="0%" cy="0" r="1%"></circle><circle cx="1.0101010101010102%" cy="0" r="1%"></circle><circle cx="2.0202020202020203%" cy="0" r="1%"></circle><circle cx="3.0303030303030303%" cy="0" r="1%"></circle><circle cx="4.040404040404041%" cy="0" r="1%"></circle><circle cx="5.05050505050505%" cy="0" r="1%"></circle><circle cx="6.0606060606060606%" cy="0" r="1%"></circle><circle cx="7.07070707070707%" cy="0" r="1%"></circle><circle cx="8.080808080808081%" cy="0" r="1%"></circle><circle cx="9.090909090909092%" cy="0" r="1%"></circle><circle cx="10.1010101010101%" cy="0" r="1%"></circle><circle cx="11.11111111111111%" cy="0" r="1%"></circle><circle cx="12.121212121212121%" cy="0" r="1%"></circle><circle cx="13.131313131313133%" cy="0" r="1%"></circle><circle cx="14.14141414141414%" cy="0" r="1%"></circle><circle cx="15.151515151515152%" cy="0" r="1%"></circle><circle cx="16.161616161616163%" cy="0" r="1%"></circle><circle cx="17.17171717171717%" cy="0" r="1%"></circle><circle cx="18.181818181818183%" cy="0" r="1%"></circle><circle cx="19.19191919191919%" cy="0" r="1%"></circle><circle cx="20.2020202020202%" cy="0" r="1%"></circle><circle cx="21.21212121212121%" cy="0" r="1%"></circle><circle cx="22.22222222222222%" cy="0" r="1%"></circle><circle cx="23.232323232323232%" cy="0" r="1%"></circle><circle cx="24.242424242424242%" cy="0" r="1%"></circle><circle cx="25.252525252525253%" cy="0" r="1%"></circle><circle cx="26.262626262626267%" cy="0" r="1%"></circle><circle cx="27.27272727272727%" cy="0" r="1%"></circle><circle cx="28.28282828282828%" cy="0" r="1%"></circle><circle cx="29.292929292929294%" cy="0" r="1%"></circle><circle cx="30.303030303030305%" cy="0" r="1%"></circle><circle cx="31.313131313131315%" cy="0" r="1%"></circle><circle cx="32.323232323232325%" cy="0" r="1%"></circle><circle cx="33.33333333333333%" cy="0" r="1%"></circle><circle cx="34.34343434343434%" cy="0" r="1%"></circle><circle cx="35.35353535353536%" cy="0" r="1%"></circle><circle cx="36.36363636363637%" cy="0" r="1%"></circle><circle cx="37.37373737373738%" cy="0" r="1%"></circle><circle cx="38.38383838383838%" cy="0" r="1%"></circle><circle cx="39.39393939393939%" cy="0" r="1%"></circle><circle cx="40.4040404040404%" cy="0" r="1%"></circle><circle cx="41.41414141414141%" cy="0" r="1%"></circle><circle cx="42.42424242424242%" cy="0" r="1%"></circle><circle cx="43.43434343434344%" cy="0" r="1%"></circle><circle cx="44.44444444444444%" cy="0" r="1%"></circle><circle cx="45.45454545454545%" cy="0" r="1%"></circle><circle cx="46.464646464646464%" cy="0" r="1%"></circle><circle cx="47.474747474747474%" cy="0" r="1%"></circle><circle cx="48.484848484848484%" cy="0" r="1%"></circle><circle cx="49.494949494949495%" cy="0" r="1%"></circle><circle cx="50.505050505050505%" cy="0" r="1%"></circle><circle cx="51.515151515151516%" cy="0" r="1%"></circle><circle cx="52.52525252525253%" cy="0" r="1%"></circle><circle cx="53.535353535353536%" cy="0" r="1%"></circle><circle cx="54.54545454545454%" cy="0" r="1%"></circle><circle cx="55.55555555555556%" cy="0" r="1%"></circle><circle cx="56.56565656565656%" cy="0" r="1%"></circle><circle cx="57.57575757575758%" cy="0" r="1%"></circle><circle cx="58.58585858585859%" cy="0" r="1%"></circle><circle cx="59.59595959595959%" cy="0" r="1%"></circle><circle cx="60.60606060606061%" cy="0" r="1%"></circle><circle cx="61.61616161616161%" cy="0" r="1%"></circle><circle cx="62.62626262626263%" cy="0" r="1%"></circle><circle cx="63.63636363636363%" cy="0" r="1%"></circle><circle cx="64.64646464646465%" cy="0" r="1%"></circle><circle cx="65.65656565656566%" cy="0" r="1%"></circle><circle cx="66.66666666666666%" cy="0" r="1%"></circle><circle cx="67.67676767676768%" cy="0" r="1%"></circle><circle cx="68.68686868686868%" cy="0" r="1%"></circle><circle cx="69.6969696969697%" cy="0" r="1%"></circle><circle cx="70.70707070707071%" cy="0" r="1%"></circle><circle cx="71.71717171717171%" cy="0" r="1%"></circle><circle cx="72.72727272727273%" cy="0" r="1%"></circle><circle cx="73.73737373737373%" cy="0" r="1%"></circle><circle cx="74.74747474747475%" cy="0" r="1%"></circle><circle cx="75.75757575757575%" cy="0" r="1%"></circle><circle cx="76.76767676767676%" cy="0" r="1%"></circle><circle cx="77.77777777777779%" cy="0" r="1%"></circle><circle cx="78.78787878787878%" cy="0" r="1%"></circle><circle cx="79.7979797979798%" cy="0" r="1%"></circle><circle cx="80.8080808080808%" cy="0" r="1%"></circle><circle cx="81.81818181818183%" cy="0" r="1%"></circle><circle cx="82.82828282828282%" cy="0" r="1%"></circle><circle cx="83.83838383838383%" cy="0" r="1%"></circle><circle cx="84.84848484848484%" cy="0" r="1%"></circle><circle cx="85.85858585858585%" cy="0" r="1%"></circle><circle cx="86.86868686868688%" cy="0" r="1%"></circle><circle cx="87.87878787878788%" cy="0" r="1%"></circle><circle cx="88.88888888888889%" cy="0" r="1%"></circle><circle cx="89.8989898989899%" cy="0" r="1%"></circle><circle cx="90.9090909090909%" cy="0" r="1%"></circle><circle cx="91.91919191919192%" cy="0" r="1%"></circle><circle cx="92.92929292929293%" cy="0" r="1%"></circle><circle cx="93.93939393939394%" cy="0" r="1%"></circle><circle cx="94.94949494949495%" cy="0" r="1%"></circle><circle cx="95.95959595959596%" cy="0" r="1%"></circle><circle cx="96.96969696969697%" cy="0" r="1%"></circle><circle cx="97.97979797979798%" cy="0" r="1%"></circle><circle cx="98.98989898989899%" cy="0" r="1%"></circle><circle cx="100%" cy="0" r="1%"></circle></svg>
+   
+</section>
+    
+
+<section >
+    <h1 class="grey"><span class="green">BioJS</span> Tree Viewer</h1>
+    <h2 class="purple">Interactive phylogenetic tree viewer for the web</h2>
+</section>    
+    
+<section style="background-color:white">
+<iframe width="870" height="500" src="//www.youtube.com/embed/an80UrDAI1k" frameborder="0" allowfullscreen style="margin-left:120px"></iframe>  
+</section>
+    
+
+    
+<section style="background-color:white">
+<iframe width="1100" height="600" src="http://edu.biojs.net/demo/treeviewer.html" frameborder="0" allowfullscreen style=""></iframe>  
+</section>
+
+<section class="chapter">
+    <h3>Kudos for your attention. <br> <br>Let us create web visualizations to represent scientific research the way it should be: <br><span class="green">interactive</span>, <span class="purple">fun</span> and <span class="blue">informative</span>. </h3>
+<h2><a href="http://bost.ocks.org/mike/">David Dao</a><div class="grey">@daviddao_</div></h2>
+</section>
+
+<script src="stack.js"></script>
+<script src="highlight.v0.js"></script>
